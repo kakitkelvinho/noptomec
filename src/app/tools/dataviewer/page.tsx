@@ -1,29 +1,26 @@
 "use client";
 
-import { timetracePlot } from "@/components/timetracePlot";
-import JsonUpload from "@/components/jsonupload";
+import React, { useState } from 'react';
 import { genSine } from "@/utils/gentestdata";
 import { oneSidedSpectrum } from "@/utils/signalprocessing";
+import { onUpload } from "@/utils/handleupload";
+import { captureConverter } from "@/utils/dataconverter";
 import  PlotTimeTrace from "@/components/plottimetrace";
-
+import Form from "next/form";
 
 export default function DataViewer() {
-  const { x, y } = genSine(20);
-  const points = x.map((xi, i) => ({x: xi, y: y[i]}));
-
-  const testData = {
-    datasets: [
-      {
-        label: "Test data",
-        data: points, 
-     }
-    ]
-  };
-
+  const x = Array.from({ length: 1000 }, (_, i) => i/999);
+  const [ jsonData, setJsonData ] = useState({
+    time: x,
+    channel1: x.map(value => Math.sin(2 * Math.PI * 30 * value))
+  });
+  
   return  (
     <>
-    <h1>Data Viewer</h1>
-    <JsonUpload />
+      <h1>Data Viewer</h1>
+      <input type="file" accept=".json" onChange={e=>onUpload(e, setJsonData)} />
+      <p>Available channels: {Object.keys(jsonData).join(', ')}</p>
+      <PlotTimeTrace data={captureConverter(jsonData)} />
     </>
   );
 }

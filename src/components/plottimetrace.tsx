@@ -22,17 +22,14 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  zoomPlugin
+  zoomPlugin,
+  autocolors
 );
 
-export default function PlotTimeTrace(data) {
-  // Takes data in the form of x and y, similar to matplotlib
-
+export default function PlotTimeTrace({ data }) {
   const options = { 
     reponsive: true,
-    plugins: {
-      autocolors: {}
-    } 
+    plugins: [autocolors]
   }
   return (
     <Scatter options={options} data={data} />
