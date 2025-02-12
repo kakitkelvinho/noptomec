@@ -1,9 +1,11 @@
 import { fft } from 'mathjs';
 
-export function twoSidedSpectrum(x, y, samplingRate=1.0) {
+export function twoSidedSpectrum(x, y) {
   // compute the two sided spectrum,
   // returns the frequency and the spectrum (magnitude)
   // as an object
+  // Determines the sampling rate by taking x as the time array 
+  const samplingRate = 1/(x[1] - x[0]); // potentially average across all diff
   const yfft = fft(y);
   const fftmag = yfft.map(c => Math.sqrt(c.re**2 + c.im**2)); // take the magnitude
   const N = fftmag.length;
@@ -15,9 +17,9 @@ export function twoSidedSpectrum(x, y, samplingRate=1.0) {
   return { fftmag: fftmag, freqs: freqs }
 };
 
-export function oneSidedSpectrum(x, y, samplingRate=1.0) {
+export function oneSidedSpectrum(x, y) {
   // takes the convention where you multiply by 2 the positive spectrum
-  const { fftmag, freqs } = twoSidedSpectrum(x, y, samplingRate);
+  const { fftmag, freqs } = twoSidedSpectrum(x, y);
   const indices = freqs.map((f, i) => (f >= 0? i : -1)).filter(i => i !== -1);
   const osfftmag = indices.map(i => i===0? fftmag[i] : 2*fftmag[i]);
   const osfreqs = indices.map(i => freqs[i]);

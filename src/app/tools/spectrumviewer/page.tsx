@@ -1,29 +1,27 @@
+
 "use client";
 
 import React, { useState } from 'react';
-import { genSine } from "@/utils/gentestdata";
 import { oneSidedSpectrum } from "@/utils/signalprocessing";
 import { onUpload } from "@/utils/handleupload";
-import { captureConverter } from "@/utils/dataconverter";
+import { captureConverter, spectrumConverter, groupConverter } from "@/utils/dataconverter";
 import  PlotTrace from "@/components/plottrace";
 import Form from "next/form";
 
-export default function DataViewer() {
+export default function SpectrumViewer() {
   const x = Array.from({ length: 1000 }, (_, i) => i/999);
-  const y = x.map(value => Math.sin(2 * Math.PI * 30 * value));
   const [ jsonData, setJsonData ] = useState({
     time: x,
-    channel1: y 
+    channel1: x.map(value => Math.sin(2 * Math.PI * 30 * value))
   });
-
   const [ files, setFiles ] = useState([jsonData,]);
   
   return  (
     <>
       <h1>Data Viewer</h1>
-      <input type="file" accept=".json" onChange={e=>onUpload(e, setFiles)} />
-      <p>Available channels: {Object.keys(jsonData).join(', ')}</p>
-      <PlotTrace data={captureConverter(jsonData)} />
+      <input type="file" accept=".json" multiple onChange={e=>onUpload(e, setFiles)} />
+      <PlotTrace data={groupConverter(files, captureConverter)} />
+      <PlotTrace data={groupConverter(files, spectrumConverter)} />
     </>
   );
 }

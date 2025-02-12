@@ -1,22 +1,32 @@
 import React from 'react';
 
-export function onUpload(event, setJsonData) {
+export function onUpload(event, setFiles) {
   // alert("Thanks!");
-  const file = event.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
+  const files = event.target.files;
+  if (!files) return;
 
-    reader.onload = () => {
-      try {
-        const parsedData = JSON.parse(reader.result as string);
-        console.log("Parsed data: ", parsedData);
-        setJsonData(parsedData);
-      } catch (error) {
-        console.error("Error parsing file: ", error);
-        alert("Sorry! Unable to read file!");
-      }
-    }
+  const fileReaders = Array.from(files).map(file => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
 
-    reader.readAsText(file);
-  };
+      reader.onload = () => {
+        try {
+          const parsedData = JSON.parse(reader.result as string);
+          resolve(parsedData);
+        } catch (error) {
+          console.error(`Error parsing ${file.name} due to `, error);
+          reject(error);
+        }
+      };
+      reader.readAsText(file);
+    });
+  });
+
+  Promise.all(fileReaders)
+    .then(allData => {
+      setFiles(allData);
+    })
+    .catch(() => {
+      alert("One or more files could not be read!");
+    });
 }

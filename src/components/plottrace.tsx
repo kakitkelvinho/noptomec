@@ -26,10 +26,13 @@ ChartJS.register(
   autocolors
 );
 
-export default function PlotTimeTrace({ data }) {
+export default function PlotTrace({ data }) {
   const options = { 
     reponsive: true,
-    plugins: [autocolors]
+    plugins: [autocolors],
+    elements: {
+      point: {radius:1, hoverRadius:4,}
+    }
   }
   return (
     <Scatter options={options} data={data} />

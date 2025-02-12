@@ -31,6 +31,7 @@ export default function RootLayout({
       <div className="topnav">
       <Link href="/">Home</Link>
       <Link href="/tools/dataviewer">Data Viewer</Link>
+      <Link href="/tools/spectrumviewer">Spectrum Viewer</Link>
       </div>
         {children}
       </body>
