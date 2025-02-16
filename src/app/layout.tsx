@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Link from 'next/link'
+import NavBar from "@/components/navbar";
+import "@/styles/global.css";
+import React from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,17 +24,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const routes = [
+    { name: "Home", link: "/" },
+    { name: "Data Viewer", link: "/tools/dataviewer" },
+    { name: "Spectrum Viewer", link: "/tools/spectrumviewer" }
+  ]
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark:bg-gray-900 dark:text-white`}
       >
-      <div className="topnav">
-      <Link href="/">Home</Link>
-      <Link href="/tools/dataviewer">Data Viewer</Link>
-      <Link href="/tools/spectrumviewer">Spectrum Viewer</Link>
-      </div>
-        {children}
+        <div className='flex'>
+          <NavBar routes={routes} />
+          <div className="w-full ml-40 px-2">{children}</div>
+        </div>
       </body>
     </html>
   );

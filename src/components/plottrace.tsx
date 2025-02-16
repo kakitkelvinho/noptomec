@@ -27,14 +27,14 @@ ChartJS.register(
 );
 
 export default function PlotTrace({ data }) {
-  const options = { 
+  const options = {
     reponsive: true,
     plugins: [autocolors],
     elements: {
-      point: {radius:1, hoverRadius:4,}
+      point: { radius: 1, hoverRadius: 4, }
     }
   }
   return (
-    <Scatter options={options} data={data} />
+    <Scatter options={options} data={data} className='m-5 p-5' />
   )
 }
