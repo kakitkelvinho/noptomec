@@ -8,10 +8,10 @@ import PlotTrace from "@/components/plottrace";
 
 export default function SpectrumViewer() {
   const x = Array.from({ length: 1000 }, (_, i) => i / 999);
-  const [jsonData, setJsonData] = useState({
+  const jsonData = {
     time: x,
     channel1: x.map(value => Math.sin(2 * Math.PI * 30 * value))
-  });
+  };
   const [files, setFiles] = useState([jsonData,]);
 
   return (
