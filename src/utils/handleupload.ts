@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function onUpload(event, setFiles) {
   // alert("Thanks!");
   const files = event.target.files;

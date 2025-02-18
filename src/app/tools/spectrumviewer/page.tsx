@@ -2,11 +2,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import { oneSidedSpectrum } from "@/utils/signalprocessing";
 import { onUpload } from "@/utils/handleupload";
 import { captureConverter, spectrumConverter, groupConverter } from "@/utils/dataconverter";
 import PlotTrace from "@/components/plottrace";
-import Form from "next/form";
 
 export default function SpectrumViewer() {
   const x = Array.from({ length: 1000 }, (_, i) => i / 999);
