@@ -1,10 +1,13 @@
-export function onUpload(event, setFiles) {
+"use client";
+import React from 'react';
+
+export function onUpload<T>(event: React.ChangeEvent<HTMLInputElement>, setFiles: React.Dispatch<React.SetStateAction<T[]>>): void {
   // alert("Thanks!");
   const files = event.target.files;
   if (!files) return;
 
   const fileReaders = Array.from(files).map(file => {
-    return new Promise((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
       const reader = new FileReader();
 
       reader.onload = () => {
@@ -21,7 +24,7 @@ export function onUpload(event, setFiles) {
   });
 
   Promise.all(fileReaders)
-    .then(allData => {
+    .then((allData: T[]): void => {
       setFiles(allData);
     })
     .catch(() => {

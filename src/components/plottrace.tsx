@@ -26,8 +26,21 @@ ChartJS.register(
   autocolors
 );
 
-export default function PlotTrace({ data }) {
-  const options = {
+interface PlotData {
+  datasets: {
+    id: number;
+    label: string;
+    data: { x: number; y: number }[];
+    showLine: boolean;
+  }[];
+}
+
+interface PlotTraceProps {
+  data: PlotData;
+}
+
+export default function PlotTrace({ data }: PlotTraceProps): React.ReactElement {
+  const options: object = {
     reponsive: true,
     plugins: [autocolors],
     elements: {
