@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from 'react';
 import { Scatter } from 'react-chartjs-2';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import autocolors from 'chartjs-plugin-autocolors';
@@ -12,7 +13,9 @@ import {
   Title,
   Tooltip,
   Legend,
+  Colors,
 } from 'chart.js';
+import Chart from 'chart.js/auto';
 
 ChartJS.register(
   CategoryScale,
@@ -22,8 +25,9 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  Colors,
   zoomPlugin,
-  autocolors
+  autocolors,
 );
 
 interface PlotData {
@@ -39,15 +43,56 @@ interface PlotTraceProps {
   data: PlotData;
 }
 
+interface Action {
+  name: string;
+  handler: (chart: Chart) => void;
+}
+
 export default function PlotTrace({ data }: PlotTraceProps): React.ReactElement {
+  const chartRef = useRef<Chart | null>(null);
   const options: object = {
     reponsive: true,
-    plugins: [autocolors],
+    plugins: {
+      zoom: {
+        zoom: {
+          wheel: { enabled: true, },
+          pinch: { enabled: true, },
+          drag: { enabled: true, modifierKey: 'ctrl', },
+          mode: 'x',
+          scaleMode: 'xy',
+        },
+        pan: { enabled: true, mode: 'xy' }
+      },
+      autocolors: { enabled: true, }
+    },
     elements: {
       point: { radius: 1, hoverRadius: 4, }
     }
   }
+
+  const actions = [
+    {
+      name: 'Reset zoom',
+      handler(chart: Chart) {
+        chart.resetZoom()
+      }
+    }
+  ]
+
+  const handleAction = (action: Action) => {
+    if (chartRef.current) {
+      action.handler(chartRef.current);
+    }
+  };
+
   return (
-    <Scatter options={options} data={data} className='m-5 p-5' />
+    <>
+      <Scatter options={options} data={data} className='m-5 p-5' ref={(chart) => {
+        if (chart) chartRef.current = chart;
+      }} />
+      <div className="flex items-center justify-normal">
+        <button className="mx-4 px-4 py-2 bg-green-900 text-white rounded" onClick={() => handleAction(actions[0])}>Reset Zoom</button>
+      </div>
+    </>
   )
 }
