@@ -85,6 +85,7 @@ function FoldersPicker({ folders, username, repo }: FoldersPickerProps): React.R
   const selectCapture = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault()
     try {
+      setAvailableTraces([]);
       const fetchPromises = selectedCaptures.map(async (capture: captureID) => {
         const response = await fetch(`https://cdn.jsdelivr.net/gh/${username}/${repo}@main/${capture.folder}/${capture.name}`);
         const data = await response.json();
