@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Scatter } from 'react-chartjs-2';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import autocolors from 'chartjs-plugin-autocolors';
@@ -49,6 +49,16 @@ interface Action {
 }
 
 export default function PlotTrace({ data }: PlotTraceProps): React.ReactElement {
+
+  const [showLine, setShowLine] = useState(true);
+  const updatedData = {
+    ...data,
+    datasets: data.datasets.map(dataset => ({
+      ...dataset,
+      showLine: showLine
+    }))
+  }
+
   const chartRef = useRef<Chart | null>(null);
   const options: object = {
     reponsive: true,
@@ -87,11 +97,12 @@ export default function PlotTrace({ data }: PlotTraceProps): React.ReactElement 
 
   return (
     <>
-      <Scatter options={options} data={data} className='m-5 p-5' ref={(chart) => {
+      <Scatter options={options} data={updatedData} className='m-5 p-5' ref={(chart) => {
         if (chart) chartRef.current = chart;
       }} />
       <div className="flex items-center justify-normal">
-        <button className="mx-4 px-4 py-2 bg-green-900 text-white rounded" onClick={() => handleAction(actions[0])}>Reset Zoom</button>
+        <button className="mx-4 px-4 py-2 bg-green-900 text-white rounded hover:bg-green-400" onClick={() => handleAction(actions[0])}>Reset Zoom</button>
+        <button className="mx-4 px-4 py-2 bg-purple-800 text-white rounded hover:bg-purple-400" onClick={() => setShowLine(!showLine)}>Toggle line</button>
       </div>
     </>
   )
