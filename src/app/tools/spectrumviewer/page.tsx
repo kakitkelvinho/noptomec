@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { onUpload } from "@/utils/handleupload";
 import { captureConverter, spectrumConverter, groupConverter } from "@/utils/dataconverter";
@@ -25,7 +25,8 @@ export default function SpectrumViewer(): React.ReactElement {
       <div className='flex justify-center items-center'>
         <input type="file" accept=".json" multiple onChange={e => onUpload(e, setFiles)} />
       </div>
-      <DataFetcher repo="cavitylockingdata" username="kakitkelvinho" />
+
+      <DataFetcher repo="cavitylockingdata" username="kakitkelvinho" setter={setFiles} />
       <PlotTrace data={groupConverter(files, captureConverter)} />
       <PlotTrace data={groupConverter(files, spectrumConverter)} />
     </>
