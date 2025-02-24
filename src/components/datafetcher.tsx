@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { useState } from "react";
 
 interface DataFetcherProp {
@@ -86,7 +86,7 @@ function FoldersPicker({ folders, username, repo }: FoldersPickerProps): React.R
     event.preventDefault()
     try {
       setAvailableTraces([]);
-      const fetchPromises = selectedCaptures.map(async (capture: captureID) => {
+      selectedCaptures.map(async (capture: captureID): Promise<void> => {
         const response = await fetch(`https://cdn.jsdelivr.net/gh/${username}/${repo}@main/${capture.folder}/${capture.name}`);
         const data = await response.json();
         const keys = Object.keys(data);
@@ -149,7 +149,7 @@ function FoldersPicker({ folders, username, repo }: FoldersPickerProps): React.R
             availableTraces.map((capture: captureID, i: number): React.ReactElement => (
               <div key={i}>
                 <p>{capture.folder} {capture.name}</p>
-                {capture.traces.map((tracename: string): React.ReactElement => <li>{tracename}</li>)}
+                {capture.traces.map((tracename: string, key: number): React.ReactElement => <li key={key}>{tracename}</li>)}
               </div>
             ))
           )}

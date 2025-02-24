@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { onUpload } from "@/utils/handleupload";
 import { captureConverter, spectrumConverter, groupConverter } from "@/utils/dataconverter";
-import datafetcher from '@/components/datafetcher';
 import DataFetcher from '@/components/datafetcher';
 const PlotTrace = dynamic(() => import('@/components/plottrace'), {
   ssr: false,
