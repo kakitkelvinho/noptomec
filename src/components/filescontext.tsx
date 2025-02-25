@@ -2,7 +2,7 @@ import { createContext, useState, ReactNode } from "react";
 
 export interface CaptureData {
   time: number[];
-  [key: string]: any;
+  [key: string]: Array<number>;
 }
 
 interface FilesContextType {

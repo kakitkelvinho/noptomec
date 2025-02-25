@@ -1,7 +1,6 @@
 import React, { useState, ReactElement, useContext } from 'react';
 import { CaptureData } from '@/utils/dataconverter';
 import { FilesContext } from './filescontext';
-import { i } from 'mathjs';
 
 interface captureID {
   key: string;

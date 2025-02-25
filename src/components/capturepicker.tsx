@@ -14,7 +14,7 @@ interface CaptureObject extends captureID {
 
 interface CapturePickerProps {
   availableCaptures: captureID[];
-  setAvailableTraces: Function;
+  setAvailableTraces: React.Dispatch<React.SetStateAction<CaptureObject[]>>;
   username: string;
   repo: string;
 }

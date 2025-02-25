@@ -26,7 +26,7 @@ interface GitHubItem {
 interface FolderPickerProps {
   username: string;
   repo: string;
-  setAvailableCaptures: Function;
+  setAvailableCaptures: React.Dispatch<React.SetStateAction<captureID[]>>;
   folders: Array<GitHubItem>;
 }
 

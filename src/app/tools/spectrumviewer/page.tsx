@@ -1,10 +1,10 @@
 
 "use client";
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import dynamic from 'next/dynamic';
 import { onUpload } from "@/utils/handleupload";
-import { captureConverter, spectrumConverter, groupConverter, CaptureData } from "@/utils/dataconverter";
+import { captureConverter, spectrumConverter, groupConverter } from "@/utils/dataconverter";
 import DataFetcher from '@/components/datafetcher';
 import { FilesContext, FilesProvider } from '@/components/filescontext';
 
