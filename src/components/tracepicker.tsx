@@ -1,5 +1,7 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, useContext } from 'react';
 import { CaptureData } from '@/utils/dataconverter';
+import { FilesContext } from './filescontext';
+import { i } from 'mathjs';
 
 interface captureID {
   key: string;
@@ -13,22 +15,67 @@ interface CaptureObject extends captureID {
 
 interface TracePickerProps {
   availableTraces: CaptureObject[];
-  setter: Function;
 }
 
 
 
-export default function TracePicker({ availableTraces, setter }: TracePickerProps): ReactElement {
+export default function TracePicker({ availableTraces }: TracePickerProps): ReactElement {
 
   const [selectedTraces, setSelectedTraces] = useState<CaptureObject[]>([]);
 
-  const handleCheckboxChange = (capture: CaptureObject) => {
+  const filesContext = useContext(FilesContext);
+  if (!filesContext) throw new Error("useContext must be used within a FilesProvider");
+  const { setFiles } = filesContext;
+
+
+  const handleCheckboxChange = (capture: CaptureObject, key: string) => {
+    // capture contains the original object with ALL data
+    // key -- what is toggled by the checkbox
+    // Compare data in capture with the key and update object
     setSelectedTraces((prev: CaptureObject[]): CaptureObject[] => {
-      const exists = prev.some((item: CaptureObject): boolean => item.key === capture.key);
-      return exists
-        ? prev.filter((item: CaptureObject): boolean => item.key !== capture.key) // filter it out if it does
-        : [...prev, capture]; // adds item if it does not exists
+      const newTraces = [...prev];
+      const search = newTraces.find((item: CaptureObject) => item.key === capture.key);
+
+      if (search) {
+        // item exists
+        const updatedData = { ...search.data }; // old data
+        if (updatedData[key]) {
+          delete updatedData[key];
+        } else {
+          updatedData[key] = capture.data[key];
+        }
+        return newTraces.map((item: CaptureObject): CaptureObject =>
+          item.key === capture.key ? { ...item, data: updatedData } : item
+        );
+      } else {
+        return [...prev,
+        {
+          ...capture,
+          data: {
+            time: capture.data.time,
+            key: capture.data[key]
+          }
+        }];
+      }
     });
+
+    //  const updatedCapture = prev.map((item: CaptureObject) => {
+    //    // find object in question
+    //    if (item.key === capture.key) {
+    //      const updatedData = { ...item.data };
+    //      const originalCapture = availableTraces
+    //        .find((item: CaptureObject) => item.key === capture.key)?.data;
+
+
+    //      updatedData[key]
+    //        ? (delete updatedData[key])
+    //        : (updatedData[key])
+
+
+    //    }
+    //  })
+    //})
+
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -44,7 +91,7 @@ export default function TracePicker({ availableTraces, setter }: TracePickerProp
       });
       files.push({ ...capture });
     });
-    setter((prev: CaptureData[]): CaptureData[] => [...files]);
+    setFiles([...files]);
   }
 
 
@@ -68,7 +115,7 @@ export default function TracePicker({ availableTraces, setter }: TracePickerProp
                         type="checkbox"
                         id={`${capture.folder}-${capture.name}-${key}`}
                         name={`${capture.folder}/${capture.name}`}
-                        onChange={() => handleCheckboxChange(capture)}
+                        onChange={() => handleCheckboxChange(capture, key)}
                       />
                       <label htmlFor={`${capture.folder}-${capture.name}-${key}`}>{key}</label>
                     </div>

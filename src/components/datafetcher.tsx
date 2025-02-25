@@ -5,12 +5,6 @@ import FolderPicker from "./folderpicker";
 import CapturePicker from "./capturepicker";
 import TracePicker from "./tracepicker";
 
-interface DataFetcherProp {
-  repo: string;
-  username: string;
-  setter: Function;
-}
-
 interface GitHubItem {
   _links: { git: string; html: string; self: string };
   git: string;
@@ -27,12 +21,16 @@ interface GitHubItem {
   url: string;
 }
 
+interface DataFetcherProp {
+  repo: string;
+  username: string;
+}
+
 
 interface FoldersPickerProps {
   folders: Array<GitHubItem>;
   username: string;
   repo: string;
-  setter: Function;
 }
 
 interface captureID {
@@ -45,7 +43,7 @@ interface CaptureObject extends captureID {
   data: CaptureData;
 }
 
-function DataPicker({ folders, username, repo, setter }: FoldersPickerProps): React.ReactElement {
+function DataPicker({ folders, username, repo }: FoldersPickerProps): React.ReactElement {
   const [availableCaptures, setAvailableCaptures] = useState<captureID[]>([]);
   const [availableTraces, setAvailableTraces] = useState<CaptureObject[]>([]);
 
@@ -59,14 +57,14 @@ function DataPicker({ folders, username, repo, setter }: FoldersPickerProps): Re
           <CapturePicker username={username} repo={repo} setAvailableTraces={setAvailableTraces} availableCaptures={availableCaptures} />
         </div>
         <div className="flex-1 mx-2 justify-center">
-          <TracePicker availableTraces={availableTraces} setter={setter} />
+          <TracePicker availableTraces={availableTraces} />
         </div>
       </div >
     </>
   );
 }
 
-export default function DataFetcher({ username, repo, setter }: DataFetcherProp): React.ReactElement {
+export default function DataFetcher({ username, repo }: DataFetcherProp): React.ReactElement {
 
   const url = `https://api.github.com/repos/${username}/${repo}/contents`;
   const [folders, setFolders] = useState([]);
@@ -82,7 +80,7 @@ export default function DataFetcher({ username, repo, setter }: DataFetcherProp)
     <>
       <div className="flex flex-col items-center justify-center">
         <button className="bg-gray-600 hover:bg-gray-400 rounded mx-4 px-4 py-2" onClick={() => handleFetch(url)}>Fetch</button>
-        <DataPicker folders={folders} username={username} repo={repo} setter={setFolders} />
+        <DataPicker folders={folders} username={username} repo={repo} />
       </div>
     </>
   );
