@@ -52,7 +52,7 @@ export default function TracePicker({ availableTraces }: TracePickerProps): Reac
           ...capture,
           data: {
             time: capture.data.time,
-            key: capture.data[key]
+            [key]: capture.data[key]
           }
         }];
       }

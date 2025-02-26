@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { CaptureData } from "@/utils/dataconverter";
 import FolderPicker from "./folderpicker";
@@ -19,11 +19,6 @@ interface GitHubItem {
   size: number;
   type: "file" | "dir"; // "file" or "dir"
   url: string;
-}
-
-interface DataFetcherProp {
-  repo: string;
-  username: string;
 }
 
 
@@ -64,22 +59,48 @@ function DataPicker({ folders, username, repo }: FoldersPickerProps): React.Reac
   );
 }
 
-export default function DataFetcher({ username, repo }: DataFetcherProp): React.ReactElement {
 
-  const url = `https://api.github.com/repos/${username}/${repo}/contents`;
+
+export default function DataFetcher(): React.ReactElement {
+
+  const [username, setUsername] = useState("kakitkelvinho");
+  const [repo, setRepo] = useState("cavitylockingdata");
+
   const [folders, setFolders] = useState([]);
 
-  const handleFetch = (url: string) => {
-    fetch(url)
-      .then((response: Response) => response.json())
+  useEffect(() => {
+    fetch(`https://api.github.com/repos/${username}/${repo}/contents`)
+      .then(response => {
+        console.log("Initial fetch success")
+        return response.json();
+      })
       .then(data => setFolders(data.filter((item: GitHubItem): boolean => item.type === "dir")))
-      .catch(error => console.error('Error: ', error));
+      .catch(error => console.error("Initial fetch failed because: ", error));
+  }, [username, repo]);
+
+  const handleFetch = (username: string, repo: string) => {
+    const url = `https://api.github.com/repos/${username}/${repo}/contents`;
+    fetch(url)
+      .then((response: Response) => {
+        console.log("Fetch success!");
+        return response.json();
+      })
+      .then(data => setFolders(data.filter((item: GitHubItem): boolean => item.type === "dir")))
+      .catch(error => console.error('Unable to fetch error: ', error));
+  }
+
+  const textboxChange = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string>>): void => {
+    setter(e.target.value);
   }
 
   return (
     <>
       <div className="flex flex-col items-center justify-center">
-        <button className="bg-gray-600 hover:bg-gray-400 rounded mx-4 px-4 py-2" onClick={() => handleFetch(url)}>Fetch</button>
+        <div className="flex h-6 my-2">
+          <input className="mx-4 text-black" type="text" id="username" value={username} onChange={e => textboxChange(e, setUsername)} />
+          <input className="mx-4 text-black" type="text" id="repo" value={repo} onChange={e => textboxChange(e, setRepo)} />
+        </div>
+        <button className="bg-gray-600 hover:bg-gray-400 rounded mx-4 my-2 px-4 py-2" onClick={() => handleFetch(username, repo)}>Fetch</button>
         <DataPicker folders={folders} username={username} repo={repo} />
       </div>
     </>

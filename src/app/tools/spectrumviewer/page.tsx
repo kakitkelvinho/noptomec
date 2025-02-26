@@ -25,7 +25,7 @@ function SpectrumViewer(): React.ReactElement {
         <input type="file" accept=".json" multiple onChange={e => onUpload(e, setFiles)} />
       </div>
 
-      <DataFetcher repo="cavitylockingdata" username="kakitkelvinho" />
+      <DataFetcher />
       <PlotTrace data={groupConverter(files, captureConverter)} />
       <PlotTrace data={groupConverter(files, spectrumConverter)} />
     </>
