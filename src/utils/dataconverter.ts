@@ -15,7 +15,40 @@ export interface Data {
   }>
 }
 
+export interface PlotlyData {
+  x: Array<number>;
+  y: Array<number>;
+  type: "scattergl" | "bar";
+  mode: "lines";
+  name: string;
+}
+
 export type CaptureArray = Array<CaptureData>;
+
+export function stackConverter(captureArray: CaptureArray): PlotlyData[] {
+  const data: PlotlyData[] = [];
+  captureArray.forEach((capture: CaptureData): void => {
+    const yNames = Object.keys(capture).filter((name: string): boolean => name !== "time");
+    const subdata = yNames.map((name: string): PlotlyData => ({
+      x: capture.time as number[],
+      y: capture[name] as number[],
+      type: "scattergl",
+      mode: "lines",
+      name
+    }));
+    data.push(...subdata);
+  });
+  return data;
+}
+
+export function stackfftConverter(captureArray: CaptureArray): PlotlyData[] {
+  const rawdata: PlotlyData[] = stackConverter(captureArray);
+  const data = rawdata.map((item: PlotlyData): PlotlyData => {
+    const { freqs, fftmag }: SpectrumResult = oneSidedLogSpectrum(item.x, item.y);
+    return ({ ...item, x: freqs, y: fftmag });
+  })
+  return data;
+}
 
 export function captureConverter(capture: CaptureData): Data {
   // Assumes a data with the following format:
