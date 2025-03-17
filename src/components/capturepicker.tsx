@@ -27,7 +27,7 @@ export default function CapturePicker({ availableCaptures, setAvailableTraces, u
     event.preventDefault()
     try {
       const traces: CaptureObject[] = [];
-      selectedCaptures.map(async (capture: captureID): Promise<void> => {
+      selectedCaptures.forEach(async (capture: captureID): Promise<void> => {
         const response = await fetch(`https://cdn.jsdelivr.net/gh/${username}/${repo}@main/${capture.folder}/${capture.name}`);
         const data = await response.json();
         traces.push({
