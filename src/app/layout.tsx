@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Noptomec App",
-  description: "A website on optomechanics, built on Next.js",
+  description: "A website on optomechanics, built on Next.js     ",
 };
 
 export default function RootLayout({

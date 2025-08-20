@@ -32,7 +32,7 @@ interface FolderPickerProps {
 
 export default function FolderPicker({ username, repo, setAvailableCaptures, folders }: FolderPickerProps): ReactElement {
 
-  const url: string = `https://api.github.com/repos/${username}/${repo}/contents`;
+  const url: string = `https://api.github.com/repos/${username}/${repo}/contents/`;
 
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
 
